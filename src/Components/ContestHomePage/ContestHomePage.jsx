@@ -3,11 +3,12 @@ import Problem from "../ProblemCard/Problem";
 
 import ProblemList from "../ProblemList/ProblemList";
 import axios from "axios";
+import baseurl from "../../Utils/Api-Url";
 
 export default function ContestHomePage() {
   const [Problems, setProblems] = useState([]);
   useEffect(() => {
-    axios.get("http://localhost:3000/get-problems").then((res) => {
+    axios.get(baseurl + "/get-problems").then((res) => {
       setProblems(res.data);
     });
   }, []);

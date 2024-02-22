@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { createContext } from "react";
+import baseurl from "../Utils/Api-Url";
 
 export const AuthContext = createContext(null);
 
@@ -9,8 +10,7 @@ export default function AuthProvider({ children }) {
   useEffect(() => {
     if (localStorage.getItem("token")) {
       const url =
-        "http://localhost:3000/is-authenticated?token=" +
-        localStorage.getItem("token");
+        baseurl + "/is-authenticated?token=" + localStorage.getItem("token");
       axios.get(url).then((res) => {
         if (res.data === "JsonWebTokenError") {
           setLoggedin(false);

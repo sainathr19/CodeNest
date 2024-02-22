@@ -13,6 +13,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import ViewSubmissions from "../ViewSubmissions/ViewSubmissions";
 import getTimestamp from "../../Utils/TimeStamp";
+import baseurl from "../../Utils/Api-Url";
 export default function Problem() {
   const [consoleOpen, setconsoleOpen] = useState(false);
   const [Lang, setLang] = useState(files["java"]);
@@ -76,7 +77,7 @@ export default function Problem() {
   const newSubmission = async () => {
     const options = {
       method: "POST",
-      url: "http://localhost:3000/new-submission/",
+      url: baseurl + "/new-submission/",
       data: {
         problem: ProblemSt.title,
         username: localStorage.getItem("username"),
@@ -123,12 +124,10 @@ export default function Problem() {
     setExcResult(out);
   }
   useEffect(() => {
-    axios
-      .get("http://localhost:3000/get-problem?id=" + params.pid)
-      .then((res) => {
-        setProblemSt(res.data);
-        console.log(ProblemSt);
-      });
+    axios.get(baseurl + "/get-problem?id=" + params.pid).then((res) => {
+      setProblemSt(res.data);
+      console.log(ProblemSt);
+    });
   }, []);
   return (
     <div className="">

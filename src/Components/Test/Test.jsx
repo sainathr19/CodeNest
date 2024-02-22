@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { encode, decode } from "base-64";
 import axios from "axios";
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
+import baseurl from "../../Utils/Api-Url";
 export default function Test() {
   const handle = useFullScreenHandle();
   const [isFullscreen, setisFullscreen] = useState(false);
@@ -25,7 +26,7 @@ export default function Test() {
   const func = () => {
     const options = {
       method: "POST",
-      url: "http://localhost:3000/add-problem",
+      url: +baseurl + "/add-problem",
       params: {},
       headers: {
         "content-type": "application/json",

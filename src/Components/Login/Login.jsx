@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { SnackbarProvider, enqueueSnackbar } from "notistack";
 import { useContext } from "react";
 import { AuthContext } from "../../Hooks/AuthProvider";
+import baseurl from "../../Utils/Api-Url";
 export default function Login() {
   const [Formdata, setFormData] = useState({
     username: "",
@@ -18,7 +19,7 @@ export default function Login() {
     }
     const options = {
       method: "POST",
-      url: "http://localhost:3000",
+      url: baseurl,
       params: {},
       headers: {
         "content-type": "application/json",
