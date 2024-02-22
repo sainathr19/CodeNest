@@ -15,6 +15,7 @@ const credentials = db.collection("credentials");
 const problem = client.db("Problems");
 
 const problems = problem.collection("problem-statements");
+const submissions = problem.collection("submissions");
 
 app.post("/", async (req, res) => {
   const username = req.body.username;
@@ -68,6 +69,13 @@ app.get("/get-problems", async (req, res) => {
     arr.push(await prob.next());
   }
   res.json(arr);
+});
+app.post("/new-submission", async (req, res) => {
+  console.log(req.body);
+  // const { problem } = req.body;
+  // console.log(problem);
+  submissions.insertOne(req.body);
+  res.send("Submission Recorded");
 });
 
 app.listen(3000, () => {

@@ -11,12 +11,16 @@ import {
 } from "base-64";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import ViewSubmissions from "../ViewSubmissions/ViewSubmissions";
+import getTimestamp from "../../Utils/TimeStamp";
 export default function Problem() {
   const [consoleOpen, setconsoleOpen] = useState(false);
   const [Lang, setLang] = useState(files["java"]);
   const [CustomInput, setCustomInput] = useState(false);
   const [ProblemSt, setProblemSt] = useState(null);
   const [ExcResult, setExcResult] = useState(null);
+  const [curTab, setCurTab] = useState("problem");
+
   const editorRef = useRef(null);
   const params = useParams();
   function handleEditorDidMount(editor, monaco) {
@@ -47,6 +51,7 @@ export default function Problem() {
     };
 
     const res = await axios.request(options);
+    console.log(res.data.token);
     return res.data.token;
   };
 
@@ -67,6 +72,43 @@ export default function Problem() {
       return res2.data;
     }
     return res.data;
+  };
+  const newSubmission = async () => {
+    const options = {
+      method: "POST",
+      url: "http://localhost:3000/new-submission/",
+      data: {
+        problem: ProblemSt.title,
+        username: localStorage.getItem("username"),
+        timestamp: getTimestamp(),
+        language: Lang.lang,
+        verdict: ExcResult.status.description,
+        sourcecode: ExcResult.source_code,
+        score: ExcResult.status_id === 3 ? ProblemSt.score : "0",
+        pid: ProblemSt.pid,
+      },
+    };
+
+    const res = await axios.request(options);
+    console.log(res);
+  };
+  const getSubmission = async () => {
+    const options = {
+      method: "GET",
+      url: "https://judge0-ce.p.rapidapi.com/submissions/6fe68974-6cc5-4589-b603-aeed934a81f2",
+      params: {
+        base64_encoded: "true",
+        fields: "*",
+      },
+      headers: {
+        "X-RapidAPI-Key": "d048904afamsh7c58dce1604a4e9p176967jsna9a437cfb37f",
+        "X-RapidAPI-Host": "judge0-ce.p.rapidapi.com",
+      },
+    };
+    axios.request(options).then((res) => {
+      console.log(res.data);
+      newSubmission();
+    });
   };
 
   async function runCode() {
@@ -92,10 +134,14 @@ export default function Problem() {
     <div className="">
       <SplitPane split="vertical">
         <div className="left">
-          {ProblemSt ? (
-            <ProblemStatement ProblemSt={ProblemSt} />
+          {curTab === "problem" ? (
+            ProblemSt ? (
+              <ProblemStatement ProblemSt={ProblemSt} />
+            ) : (
+              <p>Loading...</p>
+            )
           ) : (
-            <p>Loading...</p>
+            <ViewSubmissions />
           )}
         </div>
         <div className="right  h-full flex flex-col justify-between">
@@ -130,6 +176,7 @@ export default function Problem() {
               // }}
             >
               <Editor
+                // options={{ readOnly: true }}
                 defaultLanguage={Lang.lang}
                 defaultValue={Lang.value}
                 theme="vs-dark"
@@ -226,7 +273,12 @@ export default function Problem() {
               >
                 Run
               </button>
-              <button className="rounded bg-slate-200  p-2 w-20">Submit</button>
+              <button
+                onClick={getSubmission}
+                className="rounded bg-slate-200  p-2 w-20"
+              >
+                Submit
+              </button>
             </div>
           </div>
         </div>
