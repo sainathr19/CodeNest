@@ -33,8 +33,8 @@ app.post("/", async (req, res) => {
   }
 });
 
-app.get("/login", (req, res) => {
-  res.send("Done");
+app.get("/", (req, res) => {
+  res.send("Welcome to Codenest API");
 });
 
 app.post("/add-problem", async (req, res) => {
