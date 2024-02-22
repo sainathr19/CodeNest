@@ -137,6 +137,7 @@ export default function Test() {
           </button>
         </div>
       </div>
+      <p>ok</p>
     </FullScreen>
   );
 }
